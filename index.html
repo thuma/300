@@ -7,7 +7,7 @@
         <table v-for="id in ['300','301']" class="table">
             <tr class="table-dark">
                 <th>
-                    Tåg: {{id}}
+                    Tåg {{id}}
                 </th>
                 <th>
                     Ankomst
@@ -24,7 +24,7 @@
             </tr>
             <tr v-for="rad in timetable" v-if="rad.AdvertisedTrainIdent == id">
                 <td>
-                    {{ stationToName(rad.LocationSignature) }}
+                    {{ stationToName(rad) }}
                 </td>
                 <td v-if="rad.ActivityType.substring(0,3) == 'Ank'">
                     {{ rad.AdvertisedTimeAtLocation.substring(11,16) }}
@@ -36,8 +36,14 @@
                 </td>
                 <td v-else="">
                 </td>
-                <td>
-                    --:--
+                <td v-if="rad.TimeAtLocation">
+                    Verkling tid {{ rad.TimeAtLocation.substring(11,16) }}
+                </td>
+                <td v-else-if="rad.EstimatedTimeAtLocation">
+                    Prognås {{ rad.EstimatedTimeAtLocation.substring(11,16) }}
+                </td>
+                <td v-else="">
+
                 </td>
                 <td>
                     {{ rad.TrackAtLocation }}
@@ -59,16 +65,273 @@
                     <INCLUDE>FromLocation</INCLUDE>
                     <INCLUDE>ToLocation</INCLUDE>
                     <INCLUDE>TrackAtLocation</INCLUDE>
+                    <INCLUDE>EstimatedTimeAtLocation</INCLUDE>
+                    <INCLUDE>TimeAtLocation</INCLUDE>
                 </QUERY>
             </REQUEST>
-        </textarea><br>
-        
+        </textarea>
         <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
         <script>
             var statusapp = new Vue({
                 el: '#status',
                 data: {
-                    timetable: []
+                    timetable: [],
+                    default301: 
+                    [
+                        {
+                            "ActivityId": "1500adde-0a5d-1766-08d9-39000251e4ab",
+                            "ActivityType": "Avgang",
+                            "Advertised": true,
+                            "AdvertisedTimeAtLocation": "2021-07-11T21:55:00.000+02:00",
+                            "AdvertisedTrainIdent": "301",
+                            "Canceled": false,
+                            "Deleted": false,
+                            "Deviation": [
+                            {
+                                "Code": "ANA073",
+                                "Description": "Yttre tåg"
+                            }
+                            ],
+                            "EstimatedTimeIsPreliminary": false,
+                            "FromLocation": [
+                            {
+                                "LocationName": "M",
+                                "Priority": 1,
+                                "Order": 0
+                            }
+                            ],
+                            "InformationOwner": "Snälltåget",
+                            "LocationSignature": "M",
+                            "ModifiedTime": "2021-07-07T23:31:15.176Z",
+                            "NewEquipment": 0,
+                            "Operator": "HR",
+                            "PlannedEstimatedTimeAtLocationIsValid": false,
+                            "ProductInformation": [
+                            {
+                                "Code": "PNA069",
+                                "Description": "Snälltåget"
+                            }
+                            ],
+                            "ScheduledDepartureDateTime": "2021-07-12T00:00:00.000+02:00",
+                            "TechnicalDateTime": "2021-07-12T21:57:00.000+02:00",
+                            "TechnicalTrainIdent": "21149",
+                            "ToLocation": [
+                            {
+                                "LocationName": "De.ber",
+                                "Priority": 1,
+                                "Order": 0
+                            }
+                            ],
+                            "TrackAtLocation": "10",
+                            "TrainComposition": [
+                            {
+                                "Code": "TNA001",
+                                "Description": "Vagnsordning 220-219-218-217-216"
+                            }
+                            ],
+                            "TrainOwner": "TDEV",
+                            "TypeOfTraffic": [
+                            {
+                                "Code": "YNA001",
+                                "Description": "Tåg"
+                            }
+                            ],
+                            "ViaToLocation": [
+                            {
+                                "LocationName": "Dk.höj",
+                                "Priority": 2,
+                                "Order": 0
+                            },
+                            {
+                                "LocationName": "De.ham",
+                                "Priority": 1,
+                                "Order": 1
+                            }
+                            ],
+                            "WebLink": "http://www.snalltaget.se",
+                            "WebLinkName": "Snälltåget"
+                        },
+                        {
+                            "ActivityId": "1500adde-0a5d-1766-08d9-39000251e4ac",
+                            "ActivityType": "Ankomst",
+                            "Advertised": true,
+                            "AdvertisedTimeAtLocation": "2021-07-11T22:45:00.000+02:00",
+                            "AdvertisedTrainIdent": "301",
+                            "Canceled": false,
+                            "Deleted": false,
+                            "EstimatedTimeIsPreliminary": false,
+                            "FromLocation": [
+                            {
+                                "LocationName": "M",
+                                "Priority": 1,
+                                "Order": 0
+                            }
+                            ],
+                            "InformationOwner": "Snälltåget",
+                            "LocationSignature": "Dk.höj",
+                            "ModifiedTime": "2021-07-04T23:44:20.995Z",
+                            "NewEquipment": 0,
+                            "PlannedEstimatedTimeAtLocationIsValid": false,
+                            "ProductInformation": [
+                            {
+                                "Code": "PNA069",
+                                "Description": "Snälltåget"
+                            }
+                            ],
+                            "ScheduledDepartureDateTime": "2021-07-12T00:00:00.000+02:00",
+                            "ToLocation": [
+                            {
+                                "LocationName": "De.ber",
+                                "Priority": 1,
+                                "Order": 0
+                            }
+                            ],
+                            "TrackAtLocation": "-",
+                            "TypeOfTraffic": [
+                            {
+                                "Code": "YNA001",
+                                "Description": "Tåg"
+                            }
+                            ],
+                            "WebLink": "http://www.snalltaget.se",
+                            "WebLinkName": "Snälltåget"
+                        },
+                        {
+                            "ActivityId": "1500adde-0a5d-1766-08d9-390002544702",
+                            "ActivityType": "Avgang",
+                            "Advertised": true,
+                            "AdvertisedTimeAtLocation": "2021-07-11T22:45:00.000+02:00",
+                            "AdvertisedTrainIdent": "301",
+                            "Canceled": false,
+                            "Deleted": false,
+                            "EstimatedTimeIsPreliminary": false,
+                            "FromLocation": [
+                            {
+                                "LocationName": "M",
+                                "Priority": 1,
+                                "Order": 0
+                            }
+                            ],
+                            "InformationOwner": "Snälltåget",
+                            "LocationSignature": "Dk.höj",
+                            "ModifiedTime": "2021-07-04T23:44:20.995Z",
+                            "NewEquipment": 0,
+                            "PlannedEstimatedTimeAtLocationIsValid": false,
+                            "ProductInformation": [
+                            {
+                                "Code": "PNA069",
+                                "Description": "Snälltåget"
+                            }
+                            ],
+                            "ScheduledDepartureDateTime": "2021-07-12T00:00:00.000+02:00",
+                            "ToLocation": [
+                            {
+                                "LocationName": "De.ber",
+                                "Priority": 1,
+                                "Order": 0
+                            }
+                            ],
+                            "TrackAtLocation": "-",
+                            "TypeOfTraffic": [
+                            {
+                                "Code": "YNA001",
+                                "Description": "Tåg"
+                            }
+                            ],
+                            "WebLink": "http://www.snalltaget.se",
+                            "WebLinkName": "Snälltåget"
+                        },
+                        {
+                            "ActivityId": "1500adde-0a5d-1766-08d9-390002544703",
+                            "ActivityType": "Ankomst",
+                            "Advertised": true,
+                            "AdvertisedTimeAtLocation": "2021-07-12T05:31:00.000+02:00",
+                            "AdvertisedTrainIdent": "301",
+                            "Canceled": false,
+                            "Deleted": false,
+                            "EstimatedTimeIsPreliminary": false,
+                            "FromLocation": [
+                            {
+                                "LocationName": "M",
+                                "Priority": 1,
+                                "Order": 0
+                            }
+                            ],
+                            "InformationOwner": "Snälltåget",
+                            "LocationSignature": "De.ham",
+                            "ModifiedTime": "2021-07-04T23:44:20.995Z",
+                            "NewEquipment": 0,
+                            "PlannedEstimatedTimeAtLocationIsValid": false,
+                            "ProductInformation": [
+                            {
+                                "Code": "PNA069",
+                                "Description": "Snälltåget"
+                            }
+                            ],
+                            "ScheduledDepartureDateTime": "2021-07-12T00:00:00.000+02:00",
+                            "ToLocation": [
+                            {
+                                "LocationName": "De.ber",
+                                "Priority": 1,
+                                "Order": 0
+                            }
+                            ],
+                            "TrackAtLocation": "-",
+                            "TypeOfTraffic": [
+                            {
+                                "Code": "YNA001",
+                                "Description": "Tåg"
+                            }
+                            ],
+                            "WebLink": "http://www.snalltaget.se",
+                            "WebLinkName": "Snälltåget"
+                        },
+                        {
+                            "ActivityId": "1500adde-0a5d-1766-08d9-390002544704",
+                            "ActivityType": "Ankomst",
+                            "Advertised": true,
+                            "AdvertisedTimeAtLocation": "2021-07-12T08:52:00.000+02:00",
+                            "AdvertisedTrainIdent": "301",
+                            "Canceled": false,
+                            "Deleted": false,
+                            "EstimatedTimeIsPreliminary": false,
+                            "FromLocation": [
+                            {
+                                "LocationName": "M",
+                                "Priority": 1,
+                                "Order": 0
+                            }
+                            ],
+                            "InformationOwner": "Snälltåget",
+                            "LocationSignature": "De.ber",
+                            "ModifiedTime": "2021-07-04T23:44:21.010Z",
+                            "NewEquipment": 0,
+                            "PlannedEstimatedTimeAtLocationIsValid": false,
+                            "ProductInformation": [
+                            {
+                                "Code": "PNA069",
+                                "Description": "Snälltåget"
+                            }
+                            ],
+                            "ScheduledDepartureDateTime": "2021-07-12T00:00:00.000+02:00",
+                            "ToLocation": [
+                            {
+                                "LocationName": "De.ber",
+                                "Priority": 1,
+                                "Order": 0
+                            }
+                            ],
+                            "TrackAtLocation": "-",
+                            "TypeOfTraffic": [
+                            {
+                                "Code": "YNA001",
+                                "Description": "Tåg"
+                            }
+                            ],
+                            "WebLink": "http://www.snalltaget.se",
+                            "WebLinkName": "Snälltåget"
+                        }
+                    ]
                 },
                 created: function () {
                     this.reload()
@@ -110,14 +373,17 @@
                         }
                 },
                 methods: {
-                    stationToName: function(id){
+                    stationToName: function(rad){
                         var data = {
                             "M":"Malmö",
                             "De.ber":"Berlin",
                             "De.ham":"Hamburg Hbf",
                             "Dk.höj":"Høje Taastrup"
                         };
-                        return data[id];
+                        if(rad.stopName){ 
+                            return rad.stopName;
+                        }
+                        return data[rad.LocationSignature];
                     },
                     fixDate: function (date){
                         var delar = date.split(" ");
@@ -129,11 +395,15 @@
                         function hitta(data){
                             if(rad.AdvertisedTrainIdent == data[0].name.split(" ")[1]){
                                 rad.TrackAtLocation = data[0].track;
+                                rad.stopName = data[0].stopName;
                             }
                         }
                         var url = 'https://api.deutschebahn.com/freeplan/v1/departureBoard/'+sid+
                                 '?date='+rad.AdvertisedTimeAtLocation.substring(0,16)
                         this.getData(url).then(hitta);
+                        var url2 = 'https://api.deutschebahn.com/freeplan/v1/arrivalBoard/'+sid+
+                                '?date='+rad.AdvertisedTimeAtLocation.substring(0,16)
+                        this.getData(url2).then(hitta);
                     },
                     reload: function(){
                         this.timetable = [];
@@ -147,14 +417,19 @@
                             document.getElementById("xml").value.replace("{{id}}",id))
                             .then(data => {
                                 var firstone = false;
+                                var error = false;
                                 for(var i = 0; i < data.RESPONSE.RESULT[0].TrainAnnouncement.length; i++){
                                     rad = data.RESPONSE.RESULT[0].TrainAnnouncement[i];
                                     if(
                                         rad.FromLocation[0].LocationName == rad.LocationSignature && 
-                                        firstone
+                                        firstone && error == false
                                     ){
-                                        break;
+                                        error = true;
+                                        then.timetable.pop();
                                     }
+                                    if(error){
+                                        rad = this.default301.shift();
+                                    };
                                     if(rad.FromLocation[0].LocationName == rad.LocationSignature){
                                         firstone = true;
                                     }
