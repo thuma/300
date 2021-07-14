@@ -122,18 +122,11 @@
                         hojewebSocket.onmessage = function (event) {
                             var trains = JSON.parse(event.data).data.Trains;
                             for(var i = 0; i < trains.length; i++){
-                                if(trains[i].Product == "HV"){
-                                    then.$set(then.banedenmark, trains[i].TrainId ,trains[i]);
+                                if(trains[i].Product == "HV" && trains[i].Routes[0].DestinationStationId === "PAGR"){
+                                    then.$set(then.banedenmark, 301 ,trains[i]);
                                 }
-                            }
-                        }
-
-                    var hojewebSocket = new WebSocket("wss://labapiprod.dinstation.dk/api/ws/arrival/HT%C3%85/");
-                        hojewebSocket.onmessage = function (event) {
-                            var trains = JSON.parse(event.data).data.Trains;
-                            for(var i = 0; i < trains.length; i++){
-                                if(trains[i].Product == "HV"){
-                                    then.$set(then.banedenmark, trains[i].TrainId ,trains[i]);
+                                if(trains[i].Product == "HV" && trains[i].Routes[0].DestinationStationId === "PHM"){
+                                    then.$set(then.banedenmark, 300 ,trains[i]);
                                 }
                             }
                         }
@@ -157,11 +150,15 @@
                                 trainMessage.AdvertisedTimeAtLocation.startsWith(date) &&
                                 trainMessage.AdvertisedTrainIdent == train);
                             if(message){
+                                console.log(message, train, date)
                                 if(message.TimeAtLocation){
-                                    return{ "track":message.TrackAtLocation, "time":"Paserat "+message.TimeAtLocation.substring(11,16)};
+                                    console.log(1)
+                                    return{ "track":message.TrackAtLocation, "time":"Avgick "+message.TimeAtLocation.substring(11,16)};
                                 } else if (message.EstimatedTimeAtLocation) {
+                                    console.log(2)
                                     return{ "track":message.TrackAtLocation, "time":"Beräknad "+message.EstimatedTimeAtLocation.substring(11,16)}
                                 } else {
+                                    console.log(3)
                                     return {"track":message.TrackAtLocation, "time":""};
                                 }
                             }
@@ -172,6 +169,16 @@
                                 this.dbn[stopData.dbnetz+train] = {"track":""};
                                 this.getForStation(stopData.dbnetz, date+"T"+time, stype)
                             }
+                        } else if (stopData.rt == "banedenmark"){
+                            if(this.banedenmark[train]){
+                                if(this.banedenmark[train].TrainDeparted !== "01-01-0001 00:00:00"){
+                                    return {"track":this.banedenmark[train].TrackCurrent, "time":"Avgick " + this.banedenmark[train].TrainDeparted.split(" ")[1].substring(0,5)};
+                                } else if (this.banedenmark[train].EstimatedTimeDeparture !== "01-01-0001 00:00:00"){
+                                    return {"track":this.banedenmark[train].TrackCurrent, "time":"Beräknad " + this.banedenmark[train].EstimatedTimeDeparture.split(" ")[1].substring(0,5)};
+                                } else {
+                                    return {"track":this.banedenmark[train].TrackCurrent, "time":""};
+                                }
+                            }
                         }
                         return {"track":"","time":""};
                     },
@@ -180,8 +187,8 @@
                         function set300(data){
                             that.t300 = data.Trip[0].LegList.Leg[0].Stops.Stop;
                         }
-                        var thisdate = new Date(new Date().getTime() - (24 * 60 * 60 * 1000)).toISOString().substring(0,10);
-                        this.getData("https://api.resrobot.se/v2/trip?key=78d03ab5-d9bc-4734-9e09-70ee80d286f9&destId=740098548&originId=800060110&format=json&date="+thisdate+"&operators=380").then(
+                        var thisdate = new Date(new Date().getTime() - (16 * 60 * 60 * 1000)).toISOString().substring(0,10);
+                        this.getData("https://api.resrobot.se/v2/trip?key=78d03ab5-d9bc-4734-9e09-70ee80d286f9&destId=740098548&originId=800060110&format=json&date="+thisdate+"&operators=380&time=12:00").then(
                             set300
                         )
 
@@ -191,8 +198,8 @@
                         function set301(data){
                             that.t301 = data.Trip[0].LegList.Leg[0].Stops.Stop;
                         }
-                        var thisdate = new Date(new Date().getTime() - (24 * 60 * 60 * 1000)).toISOString().substring(0,10);
-                        this.getData("https://api.resrobot.se/v2/trip?key=78d03ab5-d9bc-4734-9e09-70ee80d286f9&destId=800060110&originId=740098548&format=json&date="+thisdate+"&operators=380").then(
+                        var thisdate = new Date(new Date().getTime() - (16 * 60 * 60 * 1000)).toISOString().substring(0,10);
+                        this.getData("https://api.resrobot.se/v2/trip?key=78d03ab5-d9bc-4734-9e09-70ee80d286f9&destId=800060110&originId=740098548&format=json&date="+thisdate+"&operators=380&time=12:00").then(
                             set301
                         )
 
